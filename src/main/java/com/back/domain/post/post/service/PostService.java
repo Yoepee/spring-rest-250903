@@ -1,11 +1,40 @@
 package com.back.domain.post.post.service;
 
+import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.repostiory.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+
+    public long count() {
+        return postRepository.count();
+    }
+
+    public List<Post> findAll() {
+        return postRepository.findAll();
+    }
+
+    public Post findById(Long id) {
+        return postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+    }
+
+    public Post create(String title, String content) {
+        Post post = new Post(title, content);
+
+        return postRepository.save(post);
+    }
+
+    public void update(Post post, String title, String content) {
+        post.modify(title, content);
+    }
+
+    public void delete(Post post) {
+        postRepository.delete(post);
+    }
 }
