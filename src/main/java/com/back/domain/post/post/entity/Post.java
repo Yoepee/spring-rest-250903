@@ -2,7 +2,6 @@ package com.back.domain.post.post.entity;
 
 import com.back.domain.post.postComment.entity.PostComment;
 import com.back.global.jpa.entity.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
@@ -26,7 +25,6 @@ public class Post extends BaseEntity {
     // PERSIST(지속), REMOVE - 영속성 전이 전달, 부모 저장 시 자식도 자동 저장 혹은 자동 삭제
     // orphanRemoval(고아) - 고아 객체 삭제, 부모와 연관관계가 끊어진 자식은 자동으로 DB에서 삭제함
     @OneToMany(mappedBy="post", fetch = FetchType.LAZY, cascade = {PERSIST, REMOVE}, orphanRemoval = true)
-    @JsonIgnore
     private List<PostComment> postComments = new ArrayList<>();
 
     public Post(String title, String content) {
