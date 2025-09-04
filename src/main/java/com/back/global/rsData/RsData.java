@@ -5,4 +5,7 @@ public record RsData<T>(
         String massage,
         T data
 ) {
+    public RsData(String resultCode, String massage) {
+        this(resultCode, massage, null);
+    }
 }
