@@ -1,7 +1,7 @@
 package com.back.domain.post.post.controller;
 
 import com.back.domain.post.post.dto.PostDto;
-import com.back.domain.post.post.dto.PostWriteForm;
+import com.back.domain.post.post.dto.PostWriteReqBody;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
 import com.back.global.rsData.RsData;
@@ -48,7 +48,7 @@ public class ApiV1PostController {
 
     @PostMapping("")
     @Transactional
-    public RsData<PostDto> post(@Valid @RequestBody PostWriteForm form){
+    public RsData<PostDto> write(@Valid @RequestBody PostWriteReqBody form){
         Post post = postService.create(form.title(), form.content());
 
         return new RsData<>(

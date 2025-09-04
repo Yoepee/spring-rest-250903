@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PostCommentService {
-    public void create(Post post, String content) {
-        post.addPostComment(content);
+    public PostComment create(Post post, String content) {
+        return post.addPostComment(content);
     }
 
     public boolean delete(Post post, PostComment postComment) {
