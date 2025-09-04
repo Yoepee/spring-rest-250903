@@ -2,12 +2,17 @@ package com.back.domain.post.postComment.service;
 
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.postComment.entity.PostComment;
+import com.back.domain.post.postComment.repository.PostCommentRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PostCommentService {
+    private final PostCommentRepository postCommentRepository;
     public PostComment create(Post post, String content) {
-        return post.addPostComment(content);
+        PostComment postComment = post.addPostComment(content);
+        return postCommentRepository.save(postComment);
     }
 
     public boolean delete(Post post, PostComment postComment) {

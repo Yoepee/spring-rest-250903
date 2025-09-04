@@ -62,7 +62,7 @@ public class ApiV1PostCommentController {
         Post post = postService.getPost(postId);
         PostComment postComment = postCommentService.create(post, form.content());
         return new RsData<>(
-                "200-1",
+                "201-1",
                 "%d번 댓글이 생성되었습니다.".formatted(postComment.getId()),
                 new PostCommentDto(postComment)
         );
