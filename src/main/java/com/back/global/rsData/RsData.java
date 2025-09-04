@@ -2,10 +2,20 @@ package com.back.global.rsData;
 
 public record RsData<T>(
         String resultCode,
-        String massage,
+        int statusCode,
+        String message,
         T data
 ) {
-    public RsData(String resultCode, String massage) {
-        this(resultCode, massage, null);
+    public RsData(String resultCode, String message) {
+        this(resultCode, message, null);
+    }
+
+    public RsData(String resultCode, String message, T data) {
+        this(
+                resultCode,
+                Integer.parseInt(resultCode.split("-", 2)[0]),
+                message,
+                data
+        );
     }
 }
