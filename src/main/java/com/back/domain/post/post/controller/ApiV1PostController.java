@@ -2,6 +2,7 @@ package com.back.domain.post.post.controller;
 
 import com.back.domain.post.post.dto.PostDto;
 import com.back.domain.post.post.dto.PostWriteReqBody;
+import com.back.domain.post.post.dto.PostWriteResBody;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
 import com.back.global.rsData.RsData;
@@ -11,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController // @Controller + @ResponseBody
@@ -49,15 +49,13 @@ public class ApiV1PostController {
 
     @PostMapping("")
     @Transactional
-    public RsData<Map<String, Object>> write(@Valid @RequestBody PostWriteReqBody form){
+    public RsData<PostWriteResBody> write(@Valid @RequestBody PostWriteReqBody form){
         Post post = postService.create(form.title(), form.content());
-
-        Map<String, Object> data = Map.of("totalCount", postService.count(), "post", new PostDto(post));
 
         return new RsData<>(
                 "200-1",
                 "%d번 게시글이 생성되었습니다.".formatted(post.getId()),
-                data
+                new PostWriteResBody(postService.count(), new PostDto(post))
         );
     }
 }
