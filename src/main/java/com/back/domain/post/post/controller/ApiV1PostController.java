@@ -58,4 +58,17 @@ public class ApiV1PostController {
                 new PostWriteResBody(postService.count(), new PostDto(post))
         );
     }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public RsData<PostWriteResBody> update(@PathVariable Long id, @Valid @RequestBody PostWriteReqBody form) {
+        Post post = postService.getPost(id);
+        postService.update(post, form.title(), form.content());
+
+        return new RsData<>(
+                "200-1",
+                "%d번 게시글이 수정되었습니다.".formatted(post.getId()),
+                new PostWriteResBody(postService.count(), new PostDto(post))
+        );
+    }
 }

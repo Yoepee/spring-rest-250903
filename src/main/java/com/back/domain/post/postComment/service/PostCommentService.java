@@ -14,7 +14,7 @@ public class PostCommentService {
         return post.deleteComment(postComment);
     }
 
-    public void modify(Post post, PostComment postComment, String content) {
+    public void update(Post post, PostComment postComment, String content) {
         post.modifyComment(postComment, content);
     }
 

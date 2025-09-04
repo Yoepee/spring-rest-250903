@@ -4,6 +4,7 @@ import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
 import com.back.domain.post.postComment.dto.PostCommentDto;
 import com.back.domain.post.postComment.dto.PostCommentWriteReqBody;
+import com.back.domain.post.postComment.dto.PostCommentWriteResBody;
 import com.back.domain.post.postComment.entity.PostComment;
 import com.back.domain.post.postComment.service.PostCommentService;
 import com.back.global.rsData.RsData;
@@ -64,6 +65,20 @@ public class ApiV1PostCommentController {
                 "200-1",
                 "%d번 댓글이 생성되었습니다.".formatted(postComment.getId()),
                 new PostCommentDto(postComment)
+        );
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public RsData<PostCommentWriteResBody> update(@PathVariable Long postId, @PathVariable Long id, @Valid @RequestBody PostCommentWriteReqBody form) {
+        Post post = postService.getPost(postId);
+        PostComment postComment = postCommentService.getCommentById(post, id);
+        postCommentService.update(post, postComment, form.content());
+
+        return new RsData<>(
+                "200-1",
+                "%d번 댓글이 수정되었습니다.".formatted(post.getId()),
+                new PostCommentWriteResBody(postService.count(), new PostCommentDto(postComment))
         );
     }
 }
