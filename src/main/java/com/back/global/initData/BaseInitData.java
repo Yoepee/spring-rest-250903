@@ -36,11 +36,11 @@ public class BaseInitData {
         Post post2 =postService.create("제목 2", "내용 2");
         postService.create("제목 3", "내용 3");
 
-        postCommentService.createComment(post1, "댓글 1");
-        postCommentService.createComment(post1, "댓글 2");
-        postCommentService.createComment(post1, "댓글 3");
-        postCommentService.createComment(post2, "댓글 4");
-        postCommentService.createComment(post2, "댓글 5");
+        postCommentService.create(post1, "댓글 1");
+        postCommentService.create(post1, "댓글 2");
+        postCommentService.create(post1, "댓글 3");
+        postCommentService.create(post2, "댓글 4");
+        postCommentService.create(post2, "댓글 5");
 
     }
 }

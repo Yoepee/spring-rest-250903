@@ -6,15 +6,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PostCommentService {
-    public void createComment(Post post, String content) {
+    public void create(Post post, String content) {
         post.addPostComment(content);
     }
 
-    public boolean deleteComment(Post post, PostComment postComment) {
+    public boolean delete(Post post, PostComment postComment) {
         return post.deleteComment(postComment);
     }
 
-    public void modifyComment(Post post, PostComment postComment, String content) {
+    public void modify(Post post, PostComment postComment, String content) {
         post.modifyComment(postComment, content);
     }
 
