@@ -41,6 +41,5 @@ public class BaseInitData {
         postCommentService.create(post1, "댓글 3");
         postCommentService.create(post2, "댓글 4");
         postCommentService.create(post2, "댓글 5");
-
     }
 }
