@@ -54,12 +54,13 @@ public class ApiV1PostController {
     public ResponseEntity<RsData<PostWriteResBody>> write(@Valid @RequestBody PostWriteReqBody form) {
         Post post = postService.create(form.title(), form.content());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(
+        return new ResponseEntity<>(
                 new RsData<>(
-                        "200-1",
+                        "201-1",
                         "%d번 게시글이 생성되었습니다.".formatted(post.getId()),
                         new PostWriteResBody(postService.count(), new PostDto(post))
-                )
+                ),
+                HttpStatus.CREATED
         );
     }
 }
