@@ -24,7 +24,7 @@ public class ApiV1PostController {
 
     @GetMapping("")
     @Transactional(readOnly = true)
-    public List<PostDto> getItems(){
+    public List<PostDto> getItems() {
         return postService.getList().stream()
                 .map(PostDto::new)
                 .collect(Collectors.toList());
@@ -32,13 +32,13 @@ public class ApiV1PostController {
 
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
-    public PostDto getItem(@PathVariable Long id){
+    public PostDto getItem(@PathVariable Long id) {
         return new PostDto(postService.getPost(id));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public RsData<PostDto> delete(@PathVariable Long id){
+    public RsData<PostDto> delete(@PathVariable Long id) {
         Post post = postService.getPost(id);
         postService.delete(post);
 
@@ -51,11 +51,15 @@ public class ApiV1PostController {
 
     @PostMapping("")
     @Transactional
-    public ResponseEntity<PostWriteResBody> write(@Valid @RequestBody PostWriteReqBody form){
+    public ResponseEntity<RsData<PostWriteResBody>> write(@Valid @RequestBody PostWriteReqBody form) {
         Post post = postService.create(form.title(), form.content());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                new PostWriteResBody(postService.count(), new PostDto(post))
+                new RsData<>(
+                        "200-1",
+                        "%d번 게시글이 생성되었습니다.".formatted(post.getId()),
+                        new PostWriteResBody(postService.count(), new PostDto(post))
+                )
         );
     }
 }
