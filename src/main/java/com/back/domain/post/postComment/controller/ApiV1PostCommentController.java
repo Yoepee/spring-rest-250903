@@ -2,10 +2,7 @@ package com.back.domain.post.postComment.controller;
 
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
-import com.back.domain.post.postComment.dto.PostCommentDto;
-import com.back.domain.post.postComment.dto.PostCommentUpdateReqDto;
-import com.back.domain.post.postComment.dto.PostCommentUpdateResDto;
-import com.back.domain.post.postComment.dto.PostCommentWriteReqBody;
+import com.back.domain.post.postComment.dto.*;
 import com.back.domain.post.postComment.entity.PostComment;
 import com.back.domain.post.postComment.service.PostCommentService;
 import com.back.global.rsData.RsData;
@@ -51,10 +48,10 @@ public class ApiV1PostCommentController {
 
     @PostMapping("")
     @Transactional
-    public RsData<PostCommentDto> write(@PathVariable Long postId, @Valid @RequestBody PostCommentWriteReqBody reqBody) {
+    public RsData<PostCommentWriteResBody> write(@PathVariable Long postId, @Valid @RequestBody PostCommentWriteReqBody reqBody) {
         Post post = postService.getPostById(postId);
         PostComment postComment = postCommentService.create(post, reqBody.content());
-        return new RsData<>("201-1", "%d번 댓글이 생성되었습니다.".formatted(postComment.getId()), new PostCommentDto(postComment));
+        return new RsData<>("201-1", "%d번 댓글이 생성되었습니다.".formatted(postComment.getId()), new PostCommentWriteResBody(postCommentService.countPostCommentsByPost(post), new PostCommentDto(postComment)));
     }
 
     @PutMapping("/{id}")

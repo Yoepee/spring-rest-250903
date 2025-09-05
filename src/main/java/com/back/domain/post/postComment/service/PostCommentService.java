@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PostCommentService {
     private final PostCommentRepository postCommentRepository;
+
+    public long countPostCommentsByPost(Post post) {
+        return postCommentRepository.countPostCommentsByPost(post);
+    }
+
     public PostComment create(Post post, String content) {
         PostComment postComment = post.addPostComment(content);
         return postCommentRepository.save(postComment);
@@ -23,7 +28,7 @@ public class PostCommentService {
         post.modifyComment(postComment, content);
     }
 
-    public PostComment getCommentById(Post post, long id){
+    public PostComment getCommentById(Post post, long id) {
         return post.findCommentById(id).orElseThrow(() -> new RuntimeException("댓글이 존재하지 않습니다."));
     }
 }
