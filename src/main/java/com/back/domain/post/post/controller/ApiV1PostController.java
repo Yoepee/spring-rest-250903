@@ -29,13 +29,13 @@ public class ApiV1PostController {
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
     public PostDto getItem(@PathVariable Long id) {
-        return new PostDto(postService.getPost(id));
+        return new PostDto(postService.getPostById(id));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public RsData<PostDto> delete(@PathVariable Long id) {
-        Post post = postService.getPost(id);
+        Post post = postService.getPostById(id);
         postService.delete(post);
 
         return new RsData<>(
@@ -47,8 +47,8 @@ public class ApiV1PostController {
 
     @PostMapping("")
     @Transactional
-    public RsData<PostWriteResBody> write(@Valid @RequestBody PostWriteReqBody form) {
-        Post post = postService.create(form.title(), form.content());
+    public RsData<PostWriteResBody> write(@Valid @RequestBody PostWriteReqBody reqBody) {
+        Post post = postService.create(reqBody.title(), reqBody.content());
 
         return new RsData<>(
                 "201-1",
@@ -59,9 +59,9 @@ public class ApiV1PostController {
 
     @PutMapping("/{id}")
     @Transactional
-    public RsData<PostUpdateResBody> update(@PathVariable Long id, @Valid @RequestBody PostUpdateReqBody form) {
-        Post post = postService.getPost(id);
-        postService.update(post, form.title(), form.content());
+    public RsData<PostUpdateResBody> update(@PathVariable Long id, @Valid @RequestBody PostUpdateReqBody reqBody) {
+        Post post = postService.getPostById(id);
+        postService.update(post, reqBody.title(), reqBody.content());
 
         return new RsData<>(
                 "200-1",
