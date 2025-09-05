@@ -1,6 +1,6 @@
 package com.back.domain.post.post.dto;
 
-public record PostUpdateResBody (
-        PostDto postDto
+public record PostUpdateResBody(
+        PostDto post
 ) {
 }
