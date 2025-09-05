@@ -7,9 +7,10 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
-@Aspect
-@Component
+@Aspect // AOP를 사용해 공통 로직을 주입하는 클래스임을 명시
+@Component // 스프링 빈으로 등록
 public class ResponseAspect {
+    // 스프링이 제공하는 HttpServletResponse 객체 (응답 조작에 사용)
     private final HttpServletResponse response;
 
     public ResponseAspect(HttpServletResponse response){
