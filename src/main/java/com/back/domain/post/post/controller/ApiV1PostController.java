@@ -1,8 +1,6 @@
 package com.back.domain.post.post.controller;
 
-import com.back.domain.post.post.dto.PostDto;
-import com.back.domain.post.post.dto.PostWriteReqBody;
-import com.back.domain.post.post.dto.PostWriteResBody;
+import com.back.domain.post.post.dto.*;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
 import com.back.global.rsData.RsData;
@@ -61,14 +59,14 @@ public class ApiV1PostController {
 
     @PutMapping("/{id}")
     @Transactional
-    public RsData<PostWriteResBody> update(@PathVariable Long id, @Valid @RequestBody PostWriteReqBody form) {
+    public RsData<PostUpdateResBody> update(@PathVariable Long id, @Valid @RequestBody PostUpdateReqBody form) {
         Post post = postService.getPost(id);
         postService.update(post, form.title(), form.content());
 
         return new RsData<>(
                 "200-1",
                 "%d번 게시글이 수정되었습니다.".formatted(post.getId()),
-                new PostWriteResBody(postService.count(), new PostDto(post))
+                new PostUpdateResBody(new PostDto(post))
         );
     }
 }
