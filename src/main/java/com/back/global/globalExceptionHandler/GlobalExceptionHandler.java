@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
                 .sorted(Comparator.comparing(String::toString))
                 .collect(Collectors.joining("\n"));
         return new ResponseEntity<>(
-                new RsData<>("404-1", message),
+                new RsData<>("400-1", message),
                 BAD_REQUEST
         );
     }
