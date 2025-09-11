@@ -156,7 +156,7 @@ public class ApiV1PostControllerTest {
     }
 
     @Test
-    @DisplayName("단건 조회 - 존재하지 않는 게시글")
+    @DisplayName("단건 조회 - 존재하지 않는 게시글, 404")
     void t6() throws Exception {
         long id = Integer.MAX_VALUE;
 
