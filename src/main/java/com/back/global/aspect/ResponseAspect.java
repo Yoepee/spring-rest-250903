@@ -13,29 +13,30 @@ public class ResponseAspect {
     // 스프링이 제공하는 HttpServletResponse 객체 (응답 조작에 사용)
     private final HttpServletResponse response;
 
-    public ResponseAspect(HttpServletResponse response){
+    public ResponseAspect(HttpServletResponse response) {
         this.response = response;
     }
 
     @Around("""
+                execution(public com.back.global.rsData.RsData *(..)) &&
                 (
-                    within(@org.springframework.web.bind.annotation.RestController *) &&
-                    (
-                        @annotation(org.springframework.web.bind.annotation.GetMapping) ||
-                        @annotation(org.springframework.web.bind.annotation.PostMapping) ||
-                        @annotation(org.springframework.web.bind.annotation.PutMapping) ||
-                        @annotation(org.springframework.web.bind.annotation.DeleteMapping) ||
-                        @annotation(org.springframework.web.bind.annotation.RequestMapping)
-                    )
-                ) ||
-                @annotation(org.springframework.web.bind.annotation.ResponseBody)
+                    within(@org.springframework.stereotype.Controller *) ||
+                    within(@org.springframework.web.bind.annotation.RestController *)
+                ) &&
+                (
+                    @annotation(org.springframework.web.bind.annotation.GetMapping) ||
+                    @annotation(org.springframework.web.bind.annotation.PostMapping) ||
+                    @annotation(org.springframework.web.bind.annotation.PutMapping) ||
+                    @annotation(org.springframework.web.bind.annotation.DeleteMapping) ||
+                    @annotation(org.springframework.web.bind.annotation.RequestMapping)
+                )
             """)
     public Object handleResponse(ProceedingJoinPoint joinPoint) throws Throwable {
         // 원래 대상 메서드를 실행
         Object proceed = joinPoint.proceed();
 
         // 반환 객체가 RsData타입인 경우
-        if (proceed instanceof RsData){
+        if (proceed instanceof RsData) {
             RsData<?> rsData = (RsData<?>) proceed;
 
             // RsData가 가진 statusCode() 값을 HTTP 응답 상태 코드로 변경
