@@ -2,6 +2,7 @@ package com.back.global.globalExceptionHandler;
 
 import com.back.global.rsData.RsData;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,6 +39,14 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining("\n"));
         return new ResponseEntity<>(
                 new RsData<>("400-1", message),
+                BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<RsData<Void>> handle(HttpMessageNotReadableException e) {
+        return new ResponseEntity<>(
+                new RsData<>("400-1", "요청 형식이 올바르지 않습니다."),
                 BAD_REQUEST
         );
     }

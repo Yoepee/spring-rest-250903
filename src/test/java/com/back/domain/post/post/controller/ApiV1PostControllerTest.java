@@ -222,4 +222,29 @@ public class ApiV1PostControllerTest {
                         """.stripIndent().trim()));
 
     }
+
+    @Test
+    @DisplayName("글 쓰기 - JSON 문법 에러, 400")
+    void t9() throws Exception {
+        ResultActions resultActions = mvc.perform(
+                post("/api/v1/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "제목 new",
+                                  content": "내용 new"
+                                }
+                                """)
+        ).andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("write"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCode").value("400-1"))
+                .andExpect(jsonPath("$.message").value("""
+                        요청 형식이 올바르지 않습니다.
+                        """.stripIndent().trim()));
+
+    }
 }
