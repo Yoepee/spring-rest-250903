@@ -58,7 +58,6 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.data.modifiedDate").value(Matchers.startsWith(post.getModifiedDate().toString().substring(0, 20))))
                 .andExpect(jsonPath("$.data.title").value(post.getTitle()))
                 .andExpect(jsonPath("$.data.content").value(post.getContent()));
-
     }
 
     @Test
@@ -170,5 +169,28 @@ public class ApiV1PostControllerTest {
                 .andExpect(handler().methodName("getItem"))
                 .andExpect(jsonPath("$.resultCode").value("404-1"))
                 .andExpect(jsonPath("$.message").value("존재하지 않는 데이터에 접근했습니다."));
+    }
+
+    @Test
+    @DisplayName("글 쓰기 - 제목 누락, 404")
+    void t7() throws Exception {
+        ResultActions resultActions = mvc.perform(
+                post("/api/v1/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "",
+                                  "content": "내용 new"
+                                }
+                                """)
+        ).andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("write"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCode").value("404-1"))
+                .andExpect(jsonPath("$.message").value("제목은 필수 값입니다."));
+
     }
 }
