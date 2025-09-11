@@ -103,4 +103,24 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.resultCode").value("200-1"))
                 .andExpect(jsonPath("$.message").value("%d번 게시글이 삭제되었습니다.".formatted(id)));
     }
+
+    @Test
+    @DisplayName("단건 조회")
+    void t4() throws Exception {
+        long id = 1;
+
+        ResultActions resultActions = mvc.perform(
+                get("/api/v1/posts/%d".formatted(id))
+        ).andDo(print());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("getItem"))
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.createdDate").isString())
+                .andExpect(jsonPath("$.modifiedDate").isString())
+                .andExpect(jsonPath("$.title").isString())
+                .andExpect(jsonPath("$.content").isString());
+    }
 }
