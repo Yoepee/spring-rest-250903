@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -124,5 +126,21 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.modifiedDate").value(Matchers.startsWith(post.getModifiedDate().toString().substring(0, 20))))
                 .andExpect(jsonPath("$.title").value(post.getTitle()))
                 .andExpect(jsonPath("$.content").value(post.getContent()));
+    }
+
+    @Test
+    @DisplayName("다건 조회")
+    void t5() throws Exception {
+        ResultActions resultActions = mvc.perform(
+                get("/api/v1/posts")
+        ).andDo(print());
+
+        List<Post> posts = postService.getList();
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("getItems"))
+                .andExpect(jsonPath("$.length()").value(posts.size()));
     }
 }
