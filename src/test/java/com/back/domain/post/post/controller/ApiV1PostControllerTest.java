@@ -83,6 +83,8 @@ public class ApiV1PostControllerTest {
                 .andExpect(handler().methodName("update"))
                 .andExpect(jsonPath("$.resultCode").value("200-1"))
                 .andExpect(jsonPath("$.message").value("%d번 게시글이 수정되었습니다.".formatted(post.getId())))
-                .andExpect(jsonPath("$.data.post.id").value(post.getId()));
+                .andExpect(jsonPath("$.data.post.id").value(post.getId()))
+                .andExpect(jsonPath("$.data.post.title").value("제목 update"))
+                .andExpect(jsonPath("$.data.post.content").value("내용 update"));
     }
 }
