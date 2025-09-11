@@ -190,7 +190,10 @@ public class ApiV1PostControllerTest {
                 .andExpect(handler().methodName("write"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.resultCode").value("404-1"))
-                .andExpect(jsonPath("$.message").value("제목은 필수 값입니다."));
+                .andExpect(jsonPath("$.message").value("""
+                        title-NotBlank-must not be blank
+                        title-Size-size must be between 2 and 100
+                        """.stripIndent().trim()));
 
     }
 }
