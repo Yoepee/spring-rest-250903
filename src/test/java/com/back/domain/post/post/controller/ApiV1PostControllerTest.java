@@ -113,14 +113,16 @@ public class ApiV1PostControllerTest {
                 get("/api/v1/posts/%d".formatted(id))
         ).andDo(print());
 
+        Post post = postService.getPostById(id);
+
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostController.class))
                 .andExpect(handler().methodName("getItem"))
-                .andExpect(jsonPath("$.id").isNumber())
-                .andExpect(jsonPath("$.createdDate").isString())
-                .andExpect(jsonPath("$.modifiedDate").isString())
-                .andExpect(jsonPath("$.title").isString())
-                .andExpect(jsonPath("$.content").isString());
+                .andExpect(jsonPath("$.id").value(post.getId()))
+                .andExpect(jsonPath("$.createdDate").value(Matchers.startsWith(post.getCreatedDate().toString().substring(0, 20))))
+                .andExpect(jsonPath("$.modifiedDate").value(Matchers.startsWith(post.getModifiedDate().toString().substring(0, 20))))
+                .andExpect(jsonPath("$.title").value(post.getTitle()))
+                .andExpect(jsonPath("$.content").value(post.getContent()));
     }
 }
