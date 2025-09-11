@@ -24,14 +24,14 @@ public class ApiV1PostCommentController {
     @GetMapping("")
     @Transactional(readOnly = true)
     public List<PostCommentDto> getComments(@PathVariable Long postId) {
-        Post post = postService.getPostById(postId);
+        Post post = postService.findById(postId);
         return post.getPostComments().stream().map(PostCommentDto::new).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
     public PostCommentDto getComment(@PathVariable Long postId, @PathVariable Long id) {
-        Post post = postService.getPostById(postId);
+        Post post = postService.findById(postId);
 
         return new PostCommentDto(postCommentService.getCommentById(post, id));
     }
@@ -39,7 +39,7 @@ public class ApiV1PostCommentController {
     @DeleteMapping("/{id}")
     @Transactional
     public RsData<Void> delete(@PathVariable Long postId, @PathVariable Long id) {
-        Post post = postService.getPostById(postId);
+        Post post = postService.findById(postId);
         PostComment postComment = postCommentService.getCommentById(post, id);
         postCommentService.delete(post, postComment);
 
@@ -49,7 +49,7 @@ public class ApiV1PostCommentController {
     @PostMapping("")
     @Transactional
     public RsData<PostCommentWriteResBody> write(@PathVariable Long postId, @Valid @RequestBody PostCommentWriteReqBody reqBody) {
-        Post post = postService.getPostById(postId);
+        Post post = postService.findById(postId);
         PostComment postComment = postCommentService.create(post, reqBody.content());
         return new RsData<>("201-1", "%d번 댓글이 생성되었습니다.".formatted(postComment.getId()), new PostCommentWriteResBody(postCommentService.countPostCommentsByPost(post), new PostCommentDto(postComment)));
     }
@@ -57,7 +57,7 @@ public class ApiV1PostCommentController {
     @PutMapping("/{id}")
     @Transactional
     public RsData<PostCommentUpdateResDto> update(@PathVariable Long postId, @PathVariable Long id, @Valid @RequestBody PostCommentUpdateReqDto reqBody) {
-        Post post = postService.getPostById(postId);
+        Post post = postService.findById(postId);
         PostComment postComment = postCommentService.getCommentById(post, id);
         postCommentService.update(post, postComment, reqBody.content());
 

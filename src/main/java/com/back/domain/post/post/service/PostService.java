@@ -21,8 +21,12 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public Post getPostById(Long id) {
-        return postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+    public Post findById(Long id) {
+        return postRepository.findById(id).get();
+    }
+
+    public Post findByTitle(String title) {
+        return postRepository.findByTitle(title).get();
     }
 
     public Post create(String title, String content) {

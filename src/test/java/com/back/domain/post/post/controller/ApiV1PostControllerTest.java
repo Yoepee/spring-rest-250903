@@ -76,7 +76,7 @@ public class ApiV1PostControllerTest {
                                 """)
         ).andDo(print());
 
-        Post post = postService.getPostById(id);
+        Post post = postService.findById(id);
 
         resultActions
                 .andExpect(status().isOk())
@@ -115,7 +115,7 @@ public class ApiV1PostControllerTest {
                 get("/api/v1/posts/%d".formatted(id))
         ).andDo(print());
 
-        Post post = postService.getPostById(id);
+        Post post = postService.findById(id);
 
         resultActions
                 .andExpect(status().isOk())
@@ -145,7 +145,7 @@ public class ApiV1PostControllerTest {
 
         for (int i = 0; i < posts.size(); i++) {
             Post post = posts.get(i);
-            
+
             resultActions
                     .andExpect(jsonPath("$[%d].id".formatted(i)).value(post.getId()))
                     .andExpect(jsonPath("$[%d].createdDate".formatted(i)).value(Matchers.startsWith(post.getCreatedDate().toString().substring(0, 20))))
@@ -153,5 +153,22 @@ public class ApiV1PostControllerTest {
                     .andExpect(jsonPath("$[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$[%d].content".formatted(i)).value(post.getContent()));
         }
+    }
+
+    @Test
+    @DisplayName("단건 조회 - 존재하지 않는 게시글")
+    void t6() throws Exception {
+        long id = Integer.MAX_VALUE;
+
+        ResultActions resultActions = mvc.perform(
+                get("/api/v1/posts/%d".formatted(id))
+        ).andDo(print());
+
+        resultActions
+                .andExpect(status().isNotFound())
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("getItem"))
+                .andExpect(jsonPath("$.resultCode").value("404-1"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 데이터에 접근했습니다."));
     }
 }

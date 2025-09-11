@@ -29,13 +29,13 @@ public class ApiV1PostController {
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
     public PostDto getItem(@PathVariable Long id) {
-        return new PostDto(postService.getPostById(id));
+        return new PostDto(postService.findById(id));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public RsData<PostDto> delete(@PathVariable Long id) {
-        Post post = postService.getPostById(id);
+        Post post = postService.findById(id);
         postService.delete(post);
 
         return new RsData<>(
@@ -60,7 +60,7 @@ public class ApiV1PostController {
     @PutMapping("/{id}")
     @Transactional
     public RsData<PostUpdateResBody> update(@PathVariable Long id, @Valid @RequestBody PostUpdateReqBody reqBody) {
-        Post post = postService.getPostById(id);
+        Post post = postService.findById(id);
         postService.update(post, reqBody.title(), reqBody.content());
 
         return new RsData<>(
