@@ -15,6 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -57,6 +59,28 @@ public class ApiV1PostCommentControllerTest {
     @Test
     @DisplayName("댓글 다건조회")
     void t2() throws Exception {
+        long postId = 1;
 
+        ResultActions resultActions = mvc.perform(
+                get("/api/v1/posts/%d/comments".formatted(postId))
+        ).andDo(print());
+
+        Post post = postService.findById(postId);
+        List<PostComment> postComments = post.getPostComments();
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostCommentController.class))
+                .andExpect(handler().methodName("getComments"))
+                .andExpect(jsonPath("$.length()").value(postComments.size()));
+
+        for (int i = 0; i < postComments.size(); i++) {
+            PostComment postComment = postComments.get(i);
+
+            resultActions
+                    .andExpect(jsonPath("$[%d].id".formatted(i)).value(postComment.getId()))
+                    .andExpect(jsonPath("$[%d].createdDate".formatted(i)).value(Matchers.startsWith(postComment.getCreatedDate().toString().substring(0, 20))))
+                    .andExpect(jsonPath("$[%d].modifiedDate".formatted(i)).value(Matchers.startsWith(postComment.getModifiedDate().toString().substring(0, 20))))
+                    .andExpect(jsonPath("$[%d].content".formatted(i)).value(postComment.getContent()));
+        }
     }
 }
