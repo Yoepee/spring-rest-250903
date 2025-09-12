@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest // 스프링부트 테스트 클래스임을 나타냅니다.
 @AutoConfigureMockMvc // MockMvc를 자동으로 설정합니다.
 @Transactional // 각 테스트 메서드가 종료되면 롤백됩니다.
-public class ApiV1PostCommentController {
+public class ApiV1PostCommentControllerTest {
     @Autowired
     private MockMvc mvc;
 

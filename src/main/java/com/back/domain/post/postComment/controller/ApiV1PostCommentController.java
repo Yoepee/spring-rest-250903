@@ -48,19 +48,19 @@ public class ApiV1PostCommentController {
 
     @PostMapping("")
     @Transactional
-    public RsData<PostCommentWriteResBody> write(@PathVariable Long postId, @Valid @RequestBody PostCommentWriteReqBody reqBody) {
+    public RsData<PostCommentDto> write(@PathVariable Long postId, @Valid @RequestBody PostCommentWriteReqBody reqBody) {
         Post post = postService.findById(postId);
         PostComment postComment = postCommentService.create(post, reqBody.content());
-        return new RsData<>("201-1", "%d번 댓글이 생성되었습니다.".formatted(postComment.getId()), new PostCommentWriteResBody(postCommentService.countPostCommentsByPost(post), new PostCommentDto(postComment)));
+        return new RsData<>("201-1", "%d번 댓글이 생성되었습니다.".formatted(postComment.getId()), new PostCommentDto(postComment));
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public RsData<PostCommentUpdateResDto> update(@PathVariable Long postId, @PathVariable Long id, @Valid @RequestBody PostCommentUpdateReqDto reqBody) {
+    public RsData<PostCommentDto> update(@PathVariable Long postId, @PathVariable Long id, @Valid @RequestBody PostCommentUpdateReqDto reqBody) {
         Post post = postService.findById(postId);
         PostComment postComment = postCommentService.getCommentById(post, id);
         postCommentService.update(post, postComment, reqBody.content());
 
-        return new RsData<>("200-1", "%d번 댓글이 수정되었습니다.".formatted(post.getId()), new PostCommentUpdateResDto(new PostCommentDto(postComment)));
+        return new RsData<>("200-1", "%d번 댓글이 수정되었습니다.".formatted(post.getId()), new PostCommentDto(postComment));
     }
 }
