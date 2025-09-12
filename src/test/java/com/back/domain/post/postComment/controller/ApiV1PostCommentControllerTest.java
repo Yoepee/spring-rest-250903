@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -17,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -86,7 +86,7 @@ public class ApiV1PostCommentControllerTest {
     }
 
     @Test
-    @DisplayName("글 삭제")
+    @DisplayName("댓글 삭제")
     void t3() throws Exception {
         long postId = 1;
         long id = 1;
@@ -101,5 +101,34 @@ public class ApiV1PostCommentControllerTest {
                 .andExpect(handler().methodName("delete"))
                 .andExpect(jsonPath("$.resultCode").value("200-1"))
                 .andExpect(jsonPath("$.message").value("%d번 댓글이 삭제되었습니다.".formatted(id)));
+    }
+
+    @Test
+    @DisplayName("댓글 수정")
+    void t4() throws Exception {
+        long postId = 1;
+        long id = 1;
+
+        ResultActions resultActions = mvc.perform(
+                put("/api/v1/posts/%d/comments/%d".formatted(postId, id))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "content": "내용 update"
+                                }
+                                """)
+        ).andDo(print());
+
+        Post post = postService.findById(postId);
+        PostComment postComment = postCommentService.getCommentById(post, id);
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostCommentController.class))
+                .andExpect(handler().methodName("update"))
+                .andExpect(jsonPath("$.resultCode").value("200-1"))
+                .andExpect(jsonPath("$.message").value("%d번 댓글이 수정되었습니다.".formatted(postComment.getId())))
+                .andExpect(jsonPath("$.data.id").value(postComment.getId()))
+                .andExpect(jsonPath("$.data.content").value("내용 update"));
     }
 }
