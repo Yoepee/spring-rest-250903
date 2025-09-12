@@ -51,6 +51,7 @@ public class ApiV1PostCommentController {
     public RsData<PostCommentDto> write(@PathVariable Long postId, @Valid @RequestBody PostCommentWriteReqBody reqBody) {
         Post post = postService.findById(postId);
         PostComment postComment = postCommentService.create(post, reqBody.content());
+        postService.flush();
         return new RsData<>("201-1", "%d번 댓글이 생성되었습니다.".formatted(postComment.getId()), new PostCommentDto(postComment));
     }
 
