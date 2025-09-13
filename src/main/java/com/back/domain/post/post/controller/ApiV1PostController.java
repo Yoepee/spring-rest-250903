@@ -12,13 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController // @Controller + @ResponseBody
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/posts")
 public class ApiV1PostController {
     private final PostService postService;
 
-    @GetMapping("")
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public List<PostDto> getItems() {
         return postService.getList().stream()
@@ -26,7 +28,7 @@ public class ApiV1PostController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public PostDto getItem(@PathVariable Long id) {
         return new PostDto(postService.findById(id));
