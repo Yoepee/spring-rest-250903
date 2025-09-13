@@ -21,8 +21,8 @@ public class SpringDocConfig {
     public GroupedOpenApi groupController() {
         return GroupedOpenApi.builder()
                 .group("non-api")
-                .pathsToMatch("/api/**")
-                .pathsToExclude("/**")
+                .pathsToMatch("/**")
+                .pathsToExclude("/api/**")
                 .build();
     }
 }

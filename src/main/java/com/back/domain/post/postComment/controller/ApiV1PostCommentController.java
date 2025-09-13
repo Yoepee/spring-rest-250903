@@ -2,10 +2,14 @@ package com.back.domain.post.postComment.controller;
 
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
-import com.back.domain.post.postComment.dto.*;
+import com.back.domain.post.postComment.dto.PostCommentDto;
+import com.back.domain.post.postComment.dto.PostCommentUpdateReqDto;
+import com.back.domain.post.postComment.dto.PostCommentWriteReqBody;
 import com.back.domain.post.postComment.entity.PostComment;
 import com.back.domain.post.postComment.service.PostCommentService;
 import com.back.global.rsData.RsData;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +21,14 @@ import java.util.stream.Collectors;
 @RestController // @Controller + @ResponseBody
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/posts/{postId}/comments")
+@Tag(name = "ApiV1PostCommentController", description = "API 댓글 컨트롤러")
 public class ApiV1PostCommentController {
     private final PostService postService;
     private final PostCommentService postCommentService;
 
     @GetMapping("")
     @Transactional(readOnly = true)
+    @Operation(summary = "다건 조회")
     public List<PostCommentDto> getComments(@PathVariable Long postId) {
         Post post = postService.findById(postId);
         return post.getPostComments().stream().map(PostCommentDto::new).collect(Collectors.toList());
@@ -30,6 +36,7 @@ public class ApiV1PostCommentController {
 
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
+    @Operation(summary = "단건 조회")
     public PostCommentDto getComment(@PathVariable Long postId, @PathVariable Long id) {
         Post post = postService.findById(postId);
 
@@ -38,6 +45,7 @@ public class ApiV1PostCommentController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(summary = "삭제")
     public RsData<Void> delete(@PathVariable Long postId, @PathVariable Long id) {
         Post post = postService.findById(postId);
         PostComment postComment = postCommentService.getCommentById(post, id);
@@ -48,6 +56,7 @@ public class ApiV1PostCommentController {
 
     @PostMapping("")
     @Transactional
+    @Operation(summary = "작성")
     public RsData<PostCommentDto> write(@PathVariable Long postId, @Valid @RequestBody PostCommentWriteReqBody reqBody) {
         Post post = postService.findById(postId);
         PostComment postComment = postCommentService.create(post, reqBody.content());
@@ -57,6 +66,7 @@ public class ApiV1PostCommentController {
 
     @PutMapping("/{id}")
     @Transactional
+    @Operation(summary = "수정")
     public RsData<PostCommentDto> update(@PathVariable Long postId, @PathVariable Long id, @Valid @RequestBody PostCommentUpdateReqDto reqBody) {
         Post post = postService.findById(postId);
         PostComment postComment = postCommentService.getCommentById(post, id);

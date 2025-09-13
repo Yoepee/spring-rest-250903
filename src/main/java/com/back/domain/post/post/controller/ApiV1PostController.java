@@ -1,9 +1,13 @@
 package com.back.domain.post.post.controller;
 
-import com.back.domain.post.post.dto.*;
+import com.back.domain.post.post.dto.PostDto;
+import com.back.domain.post.post.dto.PostUpdateReqBody;
+import com.back.domain.post.post.dto.PostWriteReqBody;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
 import com.back.global.rsData.RsData;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +21,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController // @Controller + @ResponseBody
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/posts")
+@Tag(name = "ApiV1PostController", description = "API 글 컨트롤러")
 public class ApiV1PostController {
     private final PostService postService;
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
+    @Operation(summary = "다건 조회")
     public List<PostDto> getItems() {
         return postService.getList().stream()
                 .map(PostDto::new)
@@ -30,12 +36,14 @@ public class ApiV1PostController {
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
+    @Operation(summary = "단건 조회")
     public PostDto getItem(@PathVariable Long id) {
         return new PostDto(postService.findById(id));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(summary = "삭제")
     public RsData<PostDto> delete(@PathVariable Long id) {
         Post post = postService.findById(id);
         postService.delete(post);
@@ -49,6 +57,7 @@ public class ApiV1PostController {
 
     @PostMapping("")
     @Transactional
+    @Operation(summary = "작성")
     public RsData<PostDto> write(@Valid @RequestBody PostWriteReqBody reqBody) {
         Post post = postService.create(reqBody.title(), reqBody.content());
 
@@ -61,6 +70,7 @@ public class ApiV1PostController {
 
     @PutMapping("/{id}")
     @Transactional
+    @Operation(summary = "수정")
     public RsData<PostDto> update(@PathVariable Long id, @Valid @RequestBody PostUpdateReqBody reqBody) {
         Post post = postService.findById(id);
         postService.update(post, reqBody.title(), reqBody.content());
